@@ -1,12 +1,31 @@
+# Motivation
+
+I code a lot in my dropbox folder to keep them synced across my devices (before git commits are viable) and unforutnatley dropbox does not include an automatic way to exclude syncs. Each "node_modules" or "debug" folder contains potentially thousands of small files and syncing them is a waste of time and disk space. What's worse, dropbox falters when there are many thousand small files to sync and ends up halting (see [here](https://www.dropboxforum.com/discussions/101001012/syncing-is-stuck-on-my-linux-devices-what-can-i-do/391587)), at least on linux distros I am using.
+
+I wrote this script to help me exclude directories from syncing. I have set up a job in cron to run every 5 minute and exclude pesky large folders that should not be synced in the first place.
+
+Ideally this script should be implemented by dropbox itself as a feature similiar to how a ".gitignore" file works. I opened an issue on dropbox forums and seems like someone already requested this a [full 10 YEARS ago!](https://www.dropboxforum.com/discussions/101001014/add--dropboxignore-to-automatically-ignore-filesfolders-when-syncing-/811894) In the meantime, this is what we got.
+
 # Dropbox Directory Excluder
 
 A bash script to easily exclude directories from Dropbox sync using pattern matching. This tool works with the Dropbox CLI to help you manage which directories should be excluded from syncing.
+
+## Installation
+
+You can install manually, or use the following commands to download and make the script executable:
+
+```bash
+curl -o dropbox-exclude.sh https://raw.githubusercontent.com/kavehtehrani/dropbox-exclude/master/dropbox-exclude.sh
+chmod +x dropbox-exclude.sh
+```
 
 ## Prerequisites
 
 - Dropbox desktop client installed
 - Dropbox CLI accessible in your path
 - Bash shell
+
+Note: I have only tested this on linux. Should work on MacOS as well. Windows, well I don't think you would be reading this if that were the case.
 
 ## Usage
 
@@ -41,6 +60,12 @@ Exclude all dist folders without confirmation:
 ./dropbox-exclude.sh --pattern "*dist*" --ever --y
 ```
 
+I personally use this script in a cron job to run every 5 minutes as:
+
+```bash
+*/5 * * * * ~/Dropbox/.dropbox-ignore.sh --recent 5 --pattern "node_modules" --y
+```
+
 ## How It Works
 
 1. The script searches your Dropbox directory for folders matching your specified pattern
@@ -56,7 +81,12 @@ Exclude all dist folders without confirmation:
 - Shows preview before executing
 - Requires confirmation unless auto-confirm flag is used
 - Lists all excluded directories after completion
+- Rerunning the script will not duplicate exclusions
 
 ## Note
 
 This script uses the Dropbox CLI's exclude command. Make sure you have the Dropbox command line interface properly installed and working before using this script.
+
+You can always check your current exclusion list by running `dropbox exclude list` in your terminal.
+
+Happy to receive feedback and contributions!
