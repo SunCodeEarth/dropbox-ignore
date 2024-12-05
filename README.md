@@ -1,6 +1,6 @@
 # Motivation
 
-I code a lot in my dropbox folder to keep them synced across my devices (before git commits are viable) and unfortunate dropbox does not include an automatic way to exclude syncs. Each "node_modules" or "debug" folder contains potentially thousands of small files and syncing them is a waste of time and disk space. What's worse, dropbox falters when there are many thousand small files to sync and ends up halting (see [here](https://www.dropboxforum.com/discussions/101001012/syncing-is-stuck-on-my-linux-devices-what-can-i-do/391587)), at least on linux distros I am using.
+I code a lot in my dropbox folder to keep them synced across my devices (before git commits are viable) and unfortunately dropbox does not include an automatic way to exclude syncs. Each "node_modules" or "debug" folder contains potentially thousands of small files and syncing them is a waste of time and disk space. What's worse, dropbox falters when there are many thousand small files to sync and ends up halting (see [here](https://www.dropboxforum.com/discussions/101001012/syncing-is-stuck-on-my-linux-devices-what-can-i-do/391587)), at least on linux distros I am using.
 
 I wrote this script to help me exclude directories from syncing. I have set up a job in cron to run every 5 minute and exclude pesky large folders that should not be synced in the first place.
 
