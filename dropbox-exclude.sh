@@ -9,12 +9,11 @@ PATTERN="*"  # Default pattern
 
 # Function to show usage
 show_usage() {
-    echo "Usage: $0 --pattern <glob-pattern> [--recent <minutes> | --ever] [--y] [--remove-invalid]"
+    echo "Usage: $0 --pattern <glob-pattern> [--recent <minutes> | --ever] [--y]"
     echo "  --pattern <pattern> : Glob pattern to match directories (e.g. \"node_*\")"
     echo "  --recent <minutes>  : Only search directories modified in the last n minutes"
     echo "  --ever             : Search all directories (default)"
     echo "  --y                : Proceed without confirmation"
-    echo "  --remove-invalid   : Remove non-existent directories from exclusion list"
     echo "Example: $0 --pattern \"*node_*\" --recent 60 --y"
     exit 1
 }
@@ -42,44 +41,6 @@ while [[ "$#" -gt 0 ]]; do
         --y)
             AUTO_CONFIRM=true
             shift
-            ;;
-        --remove-invalid)
-            # Get current exclusion list and check each path
-            echo "Checking for invalid exclusions..."
-            INVALID_PATHS=""
-            while read -r path; do
-                if [ ! -d "$DROPBOX_DIR/$path" ]; then
-                    echo "Found invalid exclusion: $path"
-                    INVALID_PATHS+="$path"$'\n'
-                fi
-            done < <(dropbox exclude list)
-
-            if [ -z "$INVALID_PATHS" ]; then
-                echo "No invalid exclusions found."
-                exit 0
-            fi
-
-            if [ "$AUTO_CONFIRM" = true ]; then
-                PROCEED=true
-                echo "Proceeding automatically due to --y flag"
-            else
-                echo -e "\nThe above paths will be removed from exclusion list."
-                read -p "Do you want to proceed? (y/n) " -n 1 -r
-                echo    # Move to a new line
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    PROCEED=true
-                fi
-            fi
-
-            if [ "$PROCEED" = true ]; then
-                echo "$INVALID_PATHS" | while read -r path; do
-                    [ -n "$path" ] && echo "Removing invalid exclusion: $path" && dropbox exclude remove "$path"
-                done
-                echo "Finished cleaning exclusion list"
-            else
-                echo "Operation cancelled"
-            fi
-            exit 0
             ;;
         *)
             echo "Unknown parameter: $1"
