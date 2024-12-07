@@ -80,7 +80,6 @@ I personally use this script in a cron job to run every 5 minutes as:
 - Requires explicit pattern specification
 - Shows preview before executing
 - Requires confirmation unless auto-confirm flag is used
-- Lists all excluded directories after completion
 - Rerunning the script will not duplicate exclusions
 
 ## Note

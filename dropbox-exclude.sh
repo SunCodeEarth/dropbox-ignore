@@ -55,6 +55,10 @@ if [ "$PATTERN" = "*" ]; then
     show_usage
 fi
 
+# Get the current exclusion list from Dropbox
+CURRENT_EXCLUSIONS=$(dropbox exclude list)
+echo -e "\nCurrent exclusions:\n$CURRENT_EXCLUSIONS"
+
 echo "Searching for directories matching '$PATTERN' in $DROPBOX_DIR..."
 if [ "$SEARCH_MODE" = "recent" ]; then
     echo "Looking for directories modified in the last $MINUTES minutes"
@@ -67,18 +71,41 @@ else
     FIND_CMD="find \"$DROPBOX_DIR\" -type d -name \"$PATTERN\" -print"
 fi
 
-# Store the results of find command
-FOUND_DIRS=$(eval $FIND_CMD)
+# Store the results of the find command
+FOUND_DIRS=$(eval $FIND_CMD | sort)  # Sort to ensure parent directories appear before subdirectories
 
-# List what we'll exclude (dry run)
+# Filter directories to avoid redundant exclusions
+FILTERED_DIRS=""
+while read -r dir; do
+    # Skip if parent directory is already in the exclusion list
+    IS_ALREADY_EXCLUDED=false
+    current_dir="$dir"
+    while [ "$current_dir" != "$DROPBOX_DIR" ]; do
+        if echo "$CURRENT_EXCLUSIONS" | grep -qx "$current_dir" || echo "$FILTERED_DIRS" | grep -qx "$current_dir"; then
+            IS_ALREADY_EXCLUDED=true
+            break
+        fi
+        current_dir=$(dirname "$current_dir")
+    done
+
+    # Add to the filtered list if not excluded
+    if [ "$IS_ALREADY_EXCLUDED" = false ]; then
+        FILTERED_DIRS+="$dir"$'\n'
+    fi
+done <<< "$FOUND_DIRS"
+
+# Remove trailing newlines
+FILTERED_DIRS=$(echo "$FILTERED_DIRS" | grep -v '^$')
+
+# Display directories to be excluded
 echo -e "\nThe following directories will be excluded:"
-echo "$FOUND_DIRS"
+echo "$FILTERED_DIRS"
 
-# Count the number of directories found (excluding empty lines)
-DIR_COUNT=$(echo "$FOUND_DIRS" | grep -v '^$' | wc -l)
+# Count the number of directories
+DIR_COUNT=$(echo "$FILTERED_DIRS" | grep -v '^$' | wc -l)
 
 if [ "$DIR_COUNT" -eq 0 ]; then
-    echo -e "\nNo matching directories found."
+    echo -e "\nNo matching directories found to exclude."
     exit 0
 fi
 
@@ -97,10 +124,9 @@ else
     fi
 fi
 
-if [ "$PROCEED" = true ]
-then
+if [ "$PROCEED" = true ]; then
     # Actually exclude the directories
-    echo "$FOUND_DIRS" | while read dir; do
+    echo "$FILTERED_DIRS" | while read -r dir; do
         echo "Excluding: $dir"
         dropbox exclude add "$dir"
     done
