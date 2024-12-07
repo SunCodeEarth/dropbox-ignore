@@ -67,12 +67,15 @@ else
     FIND_CMD="find \"$DROPBOX_DIR\" -type d -name \"$PATTERN\" -print"
 fi
 
-# First, just list what we'll exclude (dry run)
-echo -e "\nThe following directories will be excluded:"
-eval $FIND_CMD
+# Store the results of find command
+FOUND_DIRS=$(eval $FIND_CMD)
 
-# Count the number of directories found
-DIR_COUNT=$(eval $FIND_CMD | wc -l)
+# List what we'll exclude (dry run)
+echo -e "\nThe following directories will be excluded:"
+echo "$FOUND_DIRS"
+
+# Count the number of directories found (excluding empty lines)
+DIR_COUNT=$(echo "$FOUND_DIRS" | grep -v '^$' | wc -l)
 
 if [ "$DIR_COUNT" -eq 0 ]; then
     echo -e "\nNo matching directories found."
@@ -97,7 +100,7 @@ fi
 if [ "$PROCEED" = true ]
 then
     # Actually exclude the directories
-    eval $FIND_CMD | while read dir; do
+    echo "$FOUND_DIRS" | while read dir; do
         echo "Excluding: $dir"
         dropbox exclude add "$dir"
     done
