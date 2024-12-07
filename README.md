@@ -39,6 +39,7 @@ Note: I have only tested this on linux. Should work on MacOS as well. Windows, w
 - `--recent <minutes>`: Only search directories modified in the last n minutes
 - `--ever`: Search all directories (default)
 - `--y`: Proceed without confirmation
+- `--remove`: Remove matching directories from exclusion list (so that they resync)
 
 ### Examples
 
@@ -58,6 +59,12 @@ Exclude all dist folders without confirmation:
 
 ```bash
 ./dropbox-exclude.sh --pattern "*dist*" --ever --y
+```
+
+Remove all previously excluded node_modules directories from exclusion list:
+
+```bash
+./dropbox-exclude.sh --pattern "node_modules" --remove
 ```
 
 I personally use this script in a cron job to run every 5 minutes as:
