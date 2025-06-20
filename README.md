@@ -25,7 +25,7 @@ $dotFiles = Get-ChildItem -Path $dropboxPath -Recurse -Force -ErrorAction Silent
 #$dotFiles = Get-ChildItem -Path $dropboxPath -Recurse -Force -ErrorAction SilentlyContinue | Where-Object { $_.Name -like ".*" -or $_.Name -like "_*" }
 
 if ($dotFiles.Count -gt 0) {
-    foreach ($file in $dotFiles[0, 1]) {
+    foreach ($file in $dotFiles) {
         try {
             Write-Host "To Ignore $($file.name) by Dropbox: '$($file.FullName)'"
             Set-Content -Path $($file.FullName) -Stream com.dropbox.ignored -Value 1
