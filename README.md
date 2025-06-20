@@ -1,6 +1,6 @@
 # Powershell Script for Dropbox-Ingore
 
-[Dropbox-Exclude](https://github.com/kavehtehrani/dropbox-exclude), from which this repository is forked, provides a very neat tool to exclude folders from Dropbox syncing. It is a bash shell script and cannot be used on Windows directly. 
+[dropbox-exclude](https://github.com/kavehtehrani/dropbox-exclude), from which this repository is forked, provides a very neat tool to exclude folders from Dropbox syncing. It is a bash shell script and cannot be used on Windows directly. 
 
 Here is a Simple Powershell Script for Windows, using [command suggested by Dropbox](https://help.dropbox.com/sync/ignored-files). Unlike selective sync, ignored files will stay on the local computers but will not be synced either direction.
 
