@@ -10,12 +10,13 @@ $dropboxPath = "path\to\your\dropbox"
 
 
 # Get all files and directories starting with a dot recursively
-# Change the Filter to whatever your like "_*". See PowerShell Documentation for details and more options.
+# Change the Filter to whatever your like.
+# See PowerShell Documentation for details and more options.
 
 # to get files
 #$dotFiles = Get-ChildItem -Path $dropboxPath -Recurse -File -Filter ".*"
 
-# To get directories:
+# To get directories staring with .Rproj:
 #$dotFiles = Get-ChildItem -Path $dropboxPath -Recurse -Directory -Filter ".Rproj*"
 
 # or both files and directories
