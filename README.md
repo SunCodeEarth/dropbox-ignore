@@ -38,3 +38,5 @@ if ($dotFiles.Count -gt 0) {
 ```
 
 A more powerful and universal tool based on Python is [dot-dropbox-ignore](https://github.com/iansedano/dot-dropbox-ignore).
+
+Soon, hopefullu, we will not need these hacks as Dropbox is officially [testing a solution for ignore](https://www.dropboxforum.com/discussions/101007CC1/cut-the-clutter-test-ignore-files-feature-sign-up-to-become-a-beta-tester/840056). 
