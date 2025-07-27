@@ -2,7 +2,7 @@
 
 [dropbox-exclude](https://github.com/kavehtehrani/dropbox-exclude), from which this repository is forked, provides a very neat tool to exclude folders from Dropbox syncing. It is a bash shell script and cannot be used on Windows directly. 
 
-Here is a simple Powershell script for Windows, using [command suggested by Dropbox](https://help.dropbox.com/sync/ignored-files). Unlike `selective sync`, ignored files will stay on the local computers and will not be synced either direction. 
+Here is a simple Powershell script for Windows, using [command suggested by Dropbox](https://help.dropbox.com/sync/ignored-files). Unlike `selective sync`, ignored files will stay on the local computers and will not be synced either direction. By contrast, files excluded by `selective sync` will be online only and the local files will disappear.
 
 ```bash
 # Define the Dropbox folder path
@@ -13,7 +13,7 @@ $dropboxPath = "path\to\your\dropbox"
 # Change the Filter to whatever your like.
 # See PowerShell Documentation for details and more options.
 
-# to get files
+# to get all files in the $dropboxPath
 #$dotFiles = Get-ChildItem -Path $dropboxPath -Recurse -File -Filter ".*"
 
 # To get directories staring with .Rproj:
@@ -36,3 +36,5 @@ if ($dotFiles.Count -gt 0) {
     }
 }
 ```
+
+A more powerful and universal tool based on Python is [dot-dropbox-ignore](https://github.com/iansedano/dot-dropbox-ignore).
